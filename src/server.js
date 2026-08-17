@@ -1,12 +1,20 @@
 import express from 'express';
 import 'dotenv/config';
 import cors from "cors";
+import helmet from "helmet";
 import pino from 'pino-http';
 
 const app = express();
 
+app.use(cors({
+  origin: "*",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE"
+}));
+app.use(helmet());
+
 app.use(express.json());
-app.use(cors());
+
+
 app.use(
   pino({
     level: 'info',
@@ -23,13 +31,18 @@ app.use(
   }),
 );
 
+
+
+
 app.get('/notes', (req, res) => {
   res.status(200).json({ message: 'Retrieved all notes' });
 });
 
 app.get('/notes/:noteId', (req, res) => {
   const { noteId } = req.params;
-  res.status(200).json({ message: `Retrieved note with ID: ${noteId}` });
+  res.status(200).json({
+    message: `Retrieved note with ID: ${noteId}`,
+  });
 });
 
 app.get("/test-error", (req, res) => {
